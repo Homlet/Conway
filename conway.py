@@ -1,5 +1,7 @@
-# Conway's Game of Life
-# Written by Sam Hubbard 12/04/2014
+"""Conway's Game of Life
+
+Written by Sam Hubbard - samlhub@gmail.com
+"""
 
 import os
 from math import sin, cos, floor, ceil, pi
@@ -7,8 +9,9 @@ from time import sleep
 from copy import deepcopy
 
 
-EMPTY = "░░"
-FILLED = "▓▓"
+EMPTY  = u"\u2591" * 2
+FILLED = u"\u2593" * 2
+WALL   = u"\u2588"
 
 PATTERN_GLIDER = [(2, 2), (2, 1), (2, 0), (1, 0), (0, 1)]
 PATTERN_LWSS = [(1, 0), (4, 0), (0, 1), (0, 2), (4, 2), (0, 3), (1, 3),
@@ -36,13 +39,13 @@ class Grid:
         self.data[t[1]][t[0]] = value
 
     def __str__(self):
-        out = "█"*(self.width*len(EMPTY) + 4) + "\n"
+        out = WALL * (self.width * len(EMPTY) + 4) + "\n"
         for row in self.data:
-            out += "██"
+            out += WALL * 2
             for item in row:
                 out += str(item)
-            out += "██\n"
-        out += "█"*(self.width*len(EMPTY) + 4)
+            out += WALL * 2 + "\n"
+        out += WALL * (self.width * len(EMPTY) + 4)
         return out + "\n\n  GENERATION: " + str(self.generation)
 
 
@@ -77,7 +80,7 @@ def add_pattern(grid, pattern, x, y):
     """Adds a starting pattern to the grid at specified position.
        Patterns are lists containing offsets of filled cells."""
     for t in pattern:
-        grid[x+t[0], y+t[1]] = FILLED
+        grid[x + t[0], y + t[1]] = FILLED
 
 
 if __name__ == "__main__":
