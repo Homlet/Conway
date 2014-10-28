@@ -9,6 +9,16 @@ from time import sleep
 from copy import deepcopy
 
 
+HEADER = """
+     /  /
+    /  /
+   /~~/   Conway's Game of Life
+  /  /
+    /~~~~\\
+   /  /  /  Sam Hubbard
+  /  /  /     - samlhub@gmail.com
+"""
+
 EMPTY  = u"\u2591" * 2
 FILLED = u"\u2593" * 2
 WALL   = u"\u2588"
@@ -49,10 +59,15 @@ class Grid:
         return out + "\n\n  GENERATION: " + str(self.generation)
 
 
-def true_ceil(n):
-    """Only true programmers 'get' this function."""
+def round_out(n):
+    """Rounds to the nearest integer away from zero."""
+    # Forgive me oh Lord, for I have sinned.
     if abs(n) < 10**-10: n = 0
-    return floor(n) if n < 0 else ceil(n)
+    
+    if n != 0:
+        return ceil(abs(n)) * int(n / abs(n))
+    else:
+        return 0
 
 
 def step(grid):
@@ -64,8 +79,8 @@ def step(grid):
         for j in range(grid.height):
             neighbours = 0
             for n in range(8):
-                x = i + true_ceil(cos(n * pi / 4))
-                y = j + true_ceil(sin(n * pi / 4))
+                x = i + round_out(cos(n * pi / 4))
+                y = j + round_out(sin(n * pi / 4))
                 if grid[x, y] == FILLED:
                     neighbours += 1
             if grid[i, j] == FILLED:
@@ -83,13 +98,37 @@ def add_pattern(grid, pattern, x, y):
         grid[x + t[0], y + t[1]] = FILLED
 
 
+def int_input(prompt, error="Please input an integer:"):
+    print(prompt, end=" ")
+    while True:
+        try:
+            x = int(input())
+            return x
+        except:
+            print(error, end=" ")
+
+
+def get_settings():
+    """Prompts the user to input settings."""
+    class Settings:
+        def __init__(self):
+            self.width = int_input("Width of grid:")
+            self.height = int_input("Height of grid:")
+            self.timestep = int_input("Time-step (ms):")
+    return Settings()
+
+
 if __name__ == "__main__":
-    grid = Grid(32, 15)
+    print(HEADER)
+    settings = get_settings()
+    
+    grid = Grid(settings.width, settings.height)
     add_pattern(grid, PATTERN_BLOCK, 5, 7)
     add_pattern(grid, PATTERN_BLOCK, 25, 7)
     add_pattern(grid, PATTERN_QUEEN, 10, 4)
+    
     while True:
         os.system("cls")
         print(grid)
-        sleep(0.05)
+        sleep(settings.timestep / 1000)
         grid = step(grid)
