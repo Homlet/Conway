@@ -59,17 +59,6 @@ class Grid:
         return out + "\n\n  GENERATION: " + str(self.generation)
 
 
-def round_out(n):
-    """Rounds to the nearest integer away from zero."""
-    # Forgive me oh Lord, for I have sinned.
-    if abs(n) < 10**-10: n = 0
-    
-    if n != 0:
-        return ceil(abs(n)) * int(n / abs(n))
-    else:
-        return 0
-
-
 def step(grid):
     """Steps the grid forward one iteration, using classic
        Conway Game of Life rules."""
@@ -106,6 +95,17 @@ def int_input(prompt, error="Please input an integer:"):
             return x
         except:
             print(error, end=" ")
+
+
+def round_out(n):
+    """Rounds to the nearest integer away from zero."""
+    # Forgive me oh Lord, for I have sinned.
+    if abs(n) < 10**-10: n = 0
+    
+    if n != 0:
+        return ceil(abs(n)) * int(n / abs(n))
+    else:
+        return 0
 
 
 def get_settings():
